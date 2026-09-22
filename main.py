@@ -1,19 +1,18 @@
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
-import google.generativeai as genai
-
-#Tokens
-
-
-genai.configure(api_key=APIKEY)
+from google import genai
+import Secrets
 
 
-threadsList=[]
-class Threads():
-    def __init__(self,id):
-        self.id=id
-        self.chats=[]
+# Cliente de Gemini
+client = genai.Client(api_key=Secrets.APIKEY)
+
+threadsList = []
+class Threads:
+    def __init__(self, id):
+        self.id = id
+        self.chats = []
         threadsList.append(self)
-    
+
     def sizeControler(self):
         if len(self.chats) > 1020:
             del self.chats[:20]
@@ -70,7 +69,7 @@ async def recap(update, context):
     
 
 def main():
-    app = Application.builder().token(TOKEN).build()
+    app = Application.builder().token(Secrets.TOKEN).build()
 
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, save))
     app.add_handler(CommandHandler("recap", recap))
